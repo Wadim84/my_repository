@@ -1,0 +1,28 @@
+# Создать класс Student и создать класс Aspirant. Класс Aspirant отличается от класса Student наличием научной работы.
+# Класс Student содержит переменные: String firstName, lastName, group. А также, averageMark, содержащую среднюю оценку.
+# Создать метод getScholarship() для класса Student, который возвращает сумму стипендии. Если средняя оценка студента равна 5, то сумма 2000, иначе 1900. Переопределить этот метод в классе Aspirant.  Если средняя оценка аспиранта равна 5, то сумма 2500, иначе 2200.
+# Создать массив типа Student, содержащий объекты класса Student и Aspirant. Вызвать метод getScholarship() для каждого элемента массива.
+
+class Student:
+    def init(self, firstName, lastName, group, averageMark):
+        self.firstName = firstName
+        self.lastName = lastName
+        self.group = group
+        self.averageMark = averageMark
+    def getScholarship(self):
+        if self.averageMark == 5:
+            return 2000
+        else:
+            return 1900
+class Aspirant(Student):
+    def init(self, firstName, lastName, group, averageMark, scientificWork):
+        super().init(firstName, lastName, group, averageMark)
+        self.scientificWork = scientificWork
+    def getScholarship(self):
+        if self.averageMark == 5:
+            return 2500
+        else:
+            return 2200
+students = [Student("Dmitryi", "Krasnov", "Group 1", 4.5), Aspirant("Vadim", "Temov", "Group 2", 5.0, "scientific work"), Student("Timofey", "Durov", "Group 1", 4.0)]
+for student in students:
+    print(f"{student.firstName} {student.lastName}: {student.getScholarship()}")
