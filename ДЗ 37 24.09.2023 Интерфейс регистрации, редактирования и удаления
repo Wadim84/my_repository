@@ -1,0 +1,120 @@
+ДЗ 37 
+
+Реализовать регистрацию, редактирование и удаление поставщиков и покупателей
+
+
+
+import sqlite3
+
+# Создание базы данных
+conn = sqlite3.connect('mybase.db')
+cur = conn.cursor()
+
+# Создание таблицы Salespeople
+cur.execute('''CREATE TABLE IF NOT EXISTS Salespeople
+               (id INTEGER PRIMARY KEY, sname VARCHAR(50), city VARCHAR(50), comm FLOAT)''')
+
+# Создание таблицы Customers
+cur.execute('''CREATE TABLE IF NOT EXISTS Customers
+               (id INTEGER PRIMARY KEY, cname VARCHAR(50), city VARCHAR(50), rating INTEGER, id_sp INTEGER,
+               FOREIGN KEY (id_sp) REFERENCES Salespeople(id))''')
+
+# # Файл с именами
+# Salespeople = [] 
+# with open("salespeople.txt","r", encoding='utf-8') as f:
+#     for l in f:
+#         l = l.split()
+#         l = tuple(l)
+#         # print(l)
+#         Salespeople.append(l)Про
+
+# # print(Salespeople)
+
+# Customers = [] 
+# with open("customers.txt","r", encoding='utf-8') as m:
+#     for i in m:
+#         i = i.split()
+#         i = tuple(i)
+#         # print(i)
+#         Customers.append(i)
+# # print(Customers)
+
+# Функция для регистрации продавца
+def register_salesperson():
+    sname = input("Введите имя продавца: ")
+    city = input("Введите город продавца: ")
+    comm = float(input("Введите комиссионные продавца: "))
+    
+    # Вставка данных в таблицу Salespeople
+    cur.execute("INSERT INTO Salespeople (sname, city, comm) VALUES (?, ?, ?)", (sname, city, comm))
+    conn.commit()
+    print("Продавец успешно зарегистрирован!")
+
+# Функция для регистрации заказчика
+def register_customer():
+    cname = input("Введите имя заказчика: ")
+    city = input("Введите город заказчика: ")
+    rating = int(input("Введите рейтинг заказчика: "))
+    id_sp = int(input("Введите номер продавца, который обслуживает данного заказчика: "))
+    
+    # Вставка данных в таблицу Customers
+    cur.execute("INSERT INTO Customers (cname, city, rating, id_sp) VALUES (?, ?, ?, ?)", (cname, city, rating, id_sp))
+    conn.commit()
+    print("Заказчик успешно зарегистрирован!")
+
+# Функция для редактирования продавца
+def edit_salesperson():
+    salesperson_id = int(input("Введите номер продавца, которого нужно отредактировать: "))
+    sname = input("Введите новое имя продавца: ")
+    city = input("Введите новый город продавца: ")
+    comm = float(input("Введите новые комиссионные продавца: "))
+    
+    # Обновление данных в таблице Salespeople
+    cur.execute("UPDATE Salespeople SET sname = ?, city = ?, comm = ? WHERE id = ?", (sname, city, comm, salesperson_id))
+    conn.commit()
+    print("Данные продавца успешно обновлены!")
+
+# Функция для редактирования заказчика
+def edit_customer():
+    customer_id = int(input("Введите номер заказчика, которого нужно отредактировать: "))
+    cname = input("Введите новое имя заказчика: ")
+    city = input("Введите новый город заказчика: ")
+    rating = int(input("Введите новый рейтинг заказчика: "))
+    id_sp = int(input("Введите новый номер продавца, который обслуживает данного заказчика: "))
+    
+    # Обновление данных в таблице Customers
+    cur.execute("UPDATE Customers SET cname = ?, city = ?, rating = ?, id_sp = ? WHERE id = ?", (cname, city, rating, id_sp, customer_id))
+    conn.commit()
+    print("Данные заказчика успешно обновлены!")
+
+# Функция для удаления продавца
+def delete_salesperson():
+    salesperson_id = int(input("Введите номер продавца, которого нужно удалить: "))
+    
+    # Удаление данных из таблицы Salespeople
+    cur.execute("DELETE FROM Salespeople WHERE id = ?", (salesperson_id,))
+    conn.commit()
+    print("Продавец успешно удален!")
+
+# Функция для удаления заказчика
+def delete_customer():
+    customer_id = int(input("Введите номер заказчика, которого нужно удалить: "))
+    
+    # Удаление данных из таблицы Customers
+    cur.execute("DELETE FROM Customers WHERE id = ?", (customer_id,))
+    conn.commit()
+    print("Заказчик успешно удален!")
+
+# Вызов функций для выполнения операций
+register_salesperson()
+register_customer()
+
+edit_salesperson()
+edit_customer()
+
+delete_salesperson()
+delete_customer()
+
+# Закрытие соединения с базой данных
+cur.close()
+conn.close()
