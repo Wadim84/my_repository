@@ -1,0 +1,80 @@
+Создать таблицу players для базы данных sqlite3 с атрибутами name, best_score. Вводные данные (“Миша”,200),
+(“Ваня”,154),
+(“Дима”,178),
+(“Коля”,210).  
+Создать таблицу games с атрибутами name, score, id_player. Вводные данные: (“Миша”,110,1),
+(“Миша”,200,1),
+(“Дима”,178),
+(“Коля”,10),
+(“Коля”,30), 
+(“Коля”,40),
+(“Ваня”,154),
+(“Коля”,210);
+и написать запросы:
+показать игроков и их кол-во игр
+показать игроков и их итоговый счет за все сыгранные игры
+Найти общее кол-во игр
+Найти худший результат у каждого игрокаname, score, id_player.
+import sqlite3
+
+# Подключение к базе данных
+conn = sqlite3.connect('game_scores.db')
+cursor = conn.cursor()
+
+# Создание таблицы players
+cursor.execute('''CREATE TABLE IF NOT EXISTS players
+                (name TEXT, best_score INTEGER)''')
+
+# Вставка записей в таблицу players
+players_data = [("Миша", 200), ("Ваня", 154), ("Дима", 178), ("Коля", 210)]
+cursor.executemany("INSERT INTO players VALUES (?, ?)", players_data)
+
+# Создание таблицы games
+cursor.execute('''CREATE TABLE IF NOT EXISTS games
+                (name TEXT, score INTEGER, id_player INTEGER)''')
+
+# Вставка записей в таблицу games
+games_data = [("Миша", 110, 1), ("Миша", 200, 1), ("Дима", 178, 3),
+              ("Коля", 10, 4), ("Коля", 30, 4), ("Коля", 40, 4),
+              ("Ваня", 154, 2), ("Коля", 210, 4)]
+cursor.executemany("INSERT INTO games VALUES (?, ?, ?)", games_data)
+
+# Сохранение изменений и закрытие соединения с базой данных
+conn.commit()
+conn.close()
+
+# Подключение к базе данных
+conn = sqlite3.connect('game_scores.db')
+cursor = conn.cursor()
+
+# Запрос: показать игроков и их кол-во игр
+cursor.execute('''SELECT p.name, COUNT(g.id_player) FROM players p
+                LEFT JOIN games g ON p.rowid = g.id_player
+                GROUP BY p.name''')
+print("Игроки и их кол-во игр:")
+for row in cursor.fetchall():
+    print(f"Игрок: {row[0]}, Кол-во игр: {row[1]}")
+
+# Запрос: показать игроков и их итоговый счет за все сыгранные игры
+cursor.execute('''SELECT p.name, SUM(g.score) FROM players p
+                LEFT JOIN games g ON p.rowid = g.id_player
+                GROUP BY p.name''')
+print("Игроки и их итоговый счет:")
+for row in cursor.fetchall():
+    print(f"Игрок: {row[0]}, Счет: {row[1]}")
+
+# Запрос: найти общее кол-во игр
+cursor.execute("SELECT COUNT(*) FROM games")
+total_games = cursor.fetchone()[0]
+print(f"Общее кол-во игр: {total_games}")
+
+# Запрос: найти худший результат у каждого игрока
+cursor.execute('''SELECT p.name, MIN(g.score) FROM players p
+                LEFT JOIN games g ON p.rowid = g.id_player
+                GROUP BY p.name''')
+print("Худший результат у каждого игрока:")
+for row in cursor.fetchall():
+    print(f"Игрок: {row[0]}, Худший результат: {row[1]}")
+    
+# Закрытие соединения с базой данных
+conn.close()
