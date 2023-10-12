@@ -1,0 +1,50 @@
+Вместо скриншотов вставил комментарии под кодом по созданию ветки и коммитов
+
+
+def purchase_products(*products):
+    result = {}
+    for product in products:
+        name, price = product
+        result[name] = price
+    return result
+
+
+products = (("Кружка", 300), ("Стакан", 400), ("кофе 500 гр", 800))
+print(purchase_products(*products))
+# Output: {"Кружка": 300, "Стакан": 400, "кофе 500 гр": 800}
+
+def calculate_total_cost(products_dict):
+    total_cost = sum(products_dict.values())
+    return total_cost
+
+# PS D:\Python lessons> git status
+# On branch master
+# Untracked files:
+#   (use "git add <file>..." to include in what will be committed)
+
+# PS D:\Python lessons> git branch          
+# * feature
+#   master
+
+# PS D:\Python lessons> git add 04.10.2023.py
+# PS D:\Python lessons> git commit -m "Новая ветка"
+# [feature ff5a9e5] Новая ветка
+#  1 file changed, 11 insertions(+), 1 deletion(-)
+# PS D:\Python lessons>
+
+
+# PS D:\Python lessons> git status
+# On branch feature
+# Changes not staged for commit:
+#   (use "git add <file>..." to update what will be committed)
+#   (use "git restore <file>..." to discard changes in working directory)
+#         modified:   04.10.2023.py
+
+
+
+# PS D:\Python lessons> git log 
+# commit ff5a9e5c72ddd15502f7717b25613179e789d618 (HEAD -> feature)
+# Author: Wadim <Qazxcv33@yandex.ru>
+# Date:   Thu Oct 12 22:07:48 2023 +0500
+
+#     Новая ветка
